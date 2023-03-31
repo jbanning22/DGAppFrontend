@@ -7,6 +7,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  FlatList,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
@@ -14,7 +15,7 @@ import axios from 'axios';
 
 const App = () => {
   //   AsyncStorage.setItem('access_token', access_token);
-  //   const [data, setData] = useState('');
+  const [data, setData] = useState([]);
   const [courseName, setCourseName] = useState('');
   const [courseLength, setCourseLength] = useState(0);
 
@@ -104,20 +105,86 @@ const App = () => {
       );
       setCourseLength(0);
       setCourseName('');
+      setData(scorecard.data.holes);
+      console.log(scorecard.data.holes);
     } catch (error) {
       console.log(error);
     }
   };
 
-  //   const renderItem = ({item}) => {
-  //     return (
-  //       <View style={styles.renderItemStyle}>
-  //         <Text style={{alignSelf: 'center', fontSize: 20, fontWeight: '600'}}>
-  //           {item}
-  //         </Text>
-  //       </View>
-  //     );
-  //   };
+  const getScorecard = async id => {
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+    };
+    try {
+      const scoreC = await axios.get(`http://localhost:3000/scorecard/${id}`, {
+        headers,
+      });
+      setData(scoreC.data.holes);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const renderItem = ({item}) => {
+    console.log('render item, item is:', item);
+    return (
+      <View style={styles.renderItemStyle}>
+        <Text style={{alignSelf: 'center', fontSize: 20, fontWeight: '600'}}>
+          Hole: {item.holeNumber}
+        </Text>
+        <Text>par: {item.par}</Text>
+        <Text>strokes: {item.strokes}</Text>
+        <Button
+          title={'+'}
+          onPress={() =>
+            updateStrokesPlus(item.id, item.strokes, item.scorecardId)
+          }
+        />
+        <Button
+          title={'-'}
+          onPress={() =>
+            updateStrokesMinus(item.id, item.strokes, item.scorecardId)
+          }
+        />
+      </View>
+    );
+  };
+
+  const updateStrokesPlus = async (id, strokes, scorecardId) => {
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+    };
+    try {
+      const updatedHoleP = await axios.patch(
+        `http://localhost:3000/hole/${id}`,
+        {strokes: strokes + 1},
+        {headers},
+      );
+      console.log('context for console log', updatedHoleP);
+      getScorecard(scorecardId);
+      // setData([...updatedHoleP.data]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const updateStrokesMinus = async (id, strokes, scorecardId) => {
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+    };
+    try {
+      const updatedHoleM = await axios.patch(
+        `http://localhost:3000/hole/${id}`,
+        {strokes: strokes - 1},
+        {headers},
+      );
+      //   setData(updatedHoleM.data);
+      console.log(updatedHoleM.data);
+      getScorecard(scorecardId);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   //   console.log(emailInput);
   const handlePress = courseLength => {
     if (courseLength === '18') {
@@ -126,11 +193,17 @@ const App = () => {
       setCourseLength(9);
     }
   };
+  const fun = () => {};
   return (
     <SafeAreaView style={styles.box1}>
       <View>
         <Text style={styles.headerStyle}>Disc Golf App</Text>
-        <TouchableOpacity style={styles.button} onPress={signIn}>
+        <FlatList
+          renderItem={renderItem}
+          data={data}
+          contentContainerStyle={styles.flatlistStyle}
+        />
+        {/* <TouchableOpacity style={styles.button} onPress={signIn}>
           <Text style={styles.buttonText}>Sign In</Text>
         </TouchableOpacity>
         <TextInput
@@ -147,7 +220,7 @@ const App = () => {
           style={styles.textInput}
           onChangeText={setCourseName}
           value={courseName}
-        />
+        /> */}
         {/* <TextInput
           style={styles.textInput}
           onChangeText={setFirstName}
@@ -158,8 +231,8 @@ const App = () => {
           onChangeText={setLastname}
           value={lastName}
         /> */}
-        <Text>{courseName}</Text>
-        <Text>{courseLength}</Text>
+        {/* <Text>{courseName}</Text>
+        <Text>{courseLength}</Text> */}
         <View style={styles.buttonView}>
           <Button title="18" onPress={() => handlePress('18')} />
           <Button title="9" onPress={() => handlePress('9')} />
