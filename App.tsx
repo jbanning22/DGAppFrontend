@@ -22,6 +22,7 @@ const App = () => {
   const [accessToken, setAccessToken] = useState('');
   const [emailInput, setEmailInput] = useState('');
   const [passwordInput, setPasswordInput] = useState('');
+  const [cardId, setCardId] = useState('');
   //   const [userDetails, setUserDetails] = useState({});
   //   const [lastName, setLastname] = useState('');
   //   const [firstName, setFirstName] = useState('');
@@ -71,7 +72,7 @@ const App = () => {
       setPasswordInput('');
       //   setFirstName('');
       //   setLastname('');
-      console.log(signInRes.data.access_token);
+      //   console.log(signInRes.data.access_token);
       setAccessToken(signInRes.data.access_token);
     } catch (error) {
       console.log(error);
@@ -106,6 +107,7 @@ const App = () => {
       setCourseLength(0);
       setCourseName('');
       setData(scorecard.data.holes);
+      setCardId(scorecard.data.id);
       console.log(scorecard.data.holes);
     } catch (error) {
       console.log(error);
@@ -121,6 +123,51 @@ const App = () => {
         headers,
       });
       setData(scoreC.data.holes);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getHole = async id => {
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+    };
+    try {
+      const hole = await axios.get(`http://localhost:3000/hole/${id}`, {
+        headers,
+      });
+      setData(hole.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const deleteScorecard = async id => {
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+    };
+    try {
+      const deleteScorecard = await axios.delete(
+        `http://localhost:3000/scorecard/${id}`,
+        {headers},
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const deleteHole = async (id, scorecardId) => {
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+    };
+    try {
+      const deleteHole = await axios.delete(
+        `http://localhost:3000/hole/${id}`,
+        {
+          headers,
+        },
+      );
+      getScorecard(scorecardId);
     } catch (error) {
       console.log(error);
     }
@@ -147,6 +194,10 @@ const App = () => {
             updateStrokesMinus(item.id, item.strokes, item.scorecardId)
           }
         />
+        <Button
+          title={'x'}
+          onPress={() => deleteHole(item.id, item.scorecardId)}
+        />
       </View>
     );
   };
@@ -161,7 +212,7 @@ const App = () => {
         {strokes: strokes + 1},
         {headers},
       );
-      console.log('context for console log', updatedHoleP);
+      //   console.log('updatedStrokes plus called', updatedHoleP);
       getScorecard(scorecardId);
       // setData([...updatedHoleP.data]);
     } catch (error) {
@@ -179,7 +230,7 @@ const App = () => {
         {headers},
       );
       //   setData(updatedHoleM.data);
-      console.log(updatedHoleM.data);
+      //   console.log(updatedHoleM.data);
       getScorecard(scorecardId);
     } catch (error) {
       console.log(error);
@@ -193,7 +244,7 @@ const App = () => {
       setCourseLength(9);
     }
   };
-  const fun = () => {};
+  //   const fun = () => {};
   return (
     <SafeAreaView style={styles.box1}>
       <View>
