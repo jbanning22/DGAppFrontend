@@ -15,11 +15,19 @@ import axios from 'axios';
 
 const App = () => {
   //   AsyncStorage.setItem('access_token', access_token);
-  const [holeData, setHoleData] = useState([]);
-  const [scorecardData, setScorecardData] = useState({});
+  //   const [holeData, setHoleData] = useState([]);
+  //   const [scorecardData, setScorecardData] = useState({});
 
-  const [courseName, setCourseName] = useState('');
-  const [courseLength, setCourseLength] = useState(0);
+  //   const [courseName, setCourseName] = useState('');
+  //   const [courseLength, setCourseLength] = useState(0);
+
+  const [discName, setDiscName] = useState('');
+  const [throwName, setThrowName] = useState('');
+  const [distance, setDistance] = useState('');
+  const [throwId, setThrowId] = useState(0);
+  //   const [enteredId, setEnteredId] = useState('');
+
+  const [throwData, setThrowData] = useState({});
 
   const [accessToken, setAccessToken] = useState('');
   const [emailInput, setEmailInput] = useState('');
@@ -95,38 +103,38 @@ const App = () => {
   //     }
   //   };
 
-  const createScorecard = async () => {
-    const headers = {
-      Authorization: `Bearer ${accessToken}`,
-    };
-    try {
-      const scorecard = await axios.post(
-        'http://localhost:3000/scorecard',
-        {courseLength: courseLength, courseName: courseName},
-        {headers},
-      );
-      setCourseLength(0);
-      setCourseName('');
-      setHoleData(scorecard.data.holes);
-      //   console.log(scorecard.data.holes);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //   const createScorecard = async () => {
+  //     const headers = {
+  //       Authorization: `Bearer ${accessToken}`,
+  //     };
+  //     try {
+  //       const scorecard = await axios.post(
+  //         'http://localhost:3000/scorecard',
+  //         {courseLength: courseLength, courseName: courseName},
+  //         {headers},
+  //       );
+  //       setCourseLength(0);
+  //       setCourseName('');
+  //       setHoleData(scorecard.data.holes);
+  //       //   console.log(scorecard.data.holes);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
 
-  const getScorecard = async id => {
-    const headers = {
-      Authorization: `Bearer ${accessToken}`,
-    };
-    try {
-      const scoreC = await axios.get(`http://localhost:3000/scorecard/${id}`, {
-        headers,
-      });
-      setHoleData(scoreC.data.holes);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //   const getScorecard = async id => {
+  //     const headers = {
+  //       Authorization: `Bearer ${accessToken}`,
+  //     };
+  //     try {
+  //       const scoreC = await axios.get(`http://localhost:3000/scorecard/${id}`, {
+  //         headers,
+  //       });
+  //       setHoleData(scoreC.data.holes);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
 
   //   const getScorecards = async () => {
   //     const headers = {
@@ -142,77 +150,77 @@ const App = () => {
   //     }
   //   };
 
-  const getHole = async id => {
-    const headers = {
-      Authorization: `Bearer ${accessToken}`,
-    };
-    try {
-      const hole = await axios.get(`http://localhost:3000/hole/${id}`, {
-        headers,
-      });
-      setHoleData(hole.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //   const getHole = async id => {
+  //     const headers = {
+  //       Authorization: `Bearer ${accessToken}`,
+  //     };
+  //     try {
+  //       const hole = await axios.get(`http://localhost:3000/hole/${id}`, {
+  //         headers,
+  //       });
+  //       setHoleData(hole.data);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
 
-  const deleteScorecard = async id => {
-    const headers = {
-      Authorization: `Bearer ${accessToken}`,
-    };
-    try {
-      const deleteScorecard = await axios.delete(
-        `http://localhost:3000/scorecard/${id}`,
-        {headers},
-      );
-      getScorecard(scorecardId);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //   const deleteScorecard = async id => {
+  //     const headers = {
+  //       Authorization: `Bearer ${accessToken}`,
+  //     };
+  //     try {
+  //       const deleteScorecard = await axios.delete(
+  //         `http://localhost:3000/scorecard/${id}`,
+  //         {headers},
+  //       );
+  //       getScorecard(scorecardId);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
 
-  const deleteHole = async (id, scorecardId) => {
-    const headers = {
-      Authorization: `Bearer ${accessToken}`,
-    };
-    try {
-      const deleteHole = await axios.delete(
-        `http://localhost:3000/hole/${id}`,
-        {
-          headers,
-        },
-      );
-      getScorecard(scorecardId);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //   const deleteHole = async (id, scorecardId) => {
+  //     const headers = {
+  //       Authorization: `Bearer ${accessToken}`,
+  //     };
+  //     try {
+  //       const deleteHole = await axios.delete(
+  //         `http://localhost:3000/hole/${id}`,
+  //         {
+  //           headers,
+  //         },
+  //       );
+  //       getScorecard(scorecardId);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
 
-  const renderItem = ({item}) => {
-    console.log('render item, item is:', item);
-    return (
-      <View style={styles.renderItemStyle}>
-        <Text style={{alignSelf: 'center', fontSize: 20, fontWeight: '600'}}>
-          Hole: {item.holeNumber}
-        </Text>
-        <Text>par: {item.par}</Text>
-        <Text>strokes: {item.strokes}</Text>
-        <Button
-          title={'+'}
-          onPress={() =>
-            updateStrokesPlus(item.id, item.strokes, item.scorecardId)
-          }
-        />
-        <Button
-          title={'-'}
-          onPress={() =>
-            updateStrokesMinus(item.id, item.strokes, item.scorecardId)
-          }
-        />
-        <Button title={'x'} onPress={() => deleteScorecard(item.scorecardId)} />
-      </View>
-    );
-  };
+  //   const renderItem = ({item}) => {
+  //     console.log('render item, item is:', item);
+  //     return (
+  //       <View style={styles.renderItemStyle}>
+  //         <Text style={{alignSelf: 'center', fontSize: 20, fontWeight: '600'}}>
+  //           Hole: {item.holeNumber}
+  //         </Text>
+  //         <Text>par: {item.par}</Text>
+  //         <Text>strokes: {item.strokes}</Text>
+  //         <Button
+  //           title={'+'}
+  //           onPress={() =>
+  //             updateStrokesPlus(item.id, item.strokes, item.scorecardId)
+  //           }
+  //         />
+  //         <Button
+  //           title={'-'}
+  //           onPress={() =>
+  //             updateStrokesMinus(item.id, item.strokes, item.scorecardId)
+  //           }
+  //         />
+  //         <Button title={'x'} onPress={() => deleteScorecard(item.scorecardId)} />
+  //       </View>
+  //     );
+  //   };
 
   // const renderItem1 = ({item}) => {
   //   return (
@@ -222,81 +230,190 @@ const App = () => {
   //   );
   // };
 
-  const updateStrokesPlus = async (id, strokes, scorecardId) => {
+  //   const updateStrokesPlus = async (id, strokes, scorecardId) => {
+  //     const headers = {
+  //       Authorization: `Bearer ${accessToken}`,
+  //     };
+  //     try {
+  //       const updatedHoleP = await axios.patch(
+  //         `http://localhost:3000/hole/${id}`,
+  //         {strokes: strokes + 1},
+  //         {headers},
+  //       );
+  //       //   console.log('updatedStrokes plus called', updatedHoleP);
+  //       getScorecard(scorecardId);
+  //       // setData([...updatedHoleP.data]);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+
+  //   const updateStrokesMinus = async (id, strokes, scorecardId) => {
+  //     const headers = {
+  //       Authorization: `Bearer ${accessToken}`,
+  //     };
+  //     try {
+  //       const updatedHoleM = await axios.patch(
+  //         `http://localhost:3000/hole/${id}`,
+  //         {strokes: strokes - 1},
+  //         {headers},
+  //       );
+  //       //   setData(updatedHoleM.data);
+  //       //   console.log(updatedHoleM.data);
+  //       getScorecard(scorecardId);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+
+  const createThrow = async () => {
     const headers = {
       Authorization: `Bearer ${accessToken}`,
     };
     try {
-      const updatedHoleP = await axios.patch(
-        `http://localhost:3000/hole/${id}`,
-        {strokes: strokes + 1},
+      const measuredThrow = await axios.post(
+        'http://localhost:3000/measure-throws',
+        {disc: discName, distance: distance, throwtype: throwName},
         {headers},
       );
-      //   console.log('updatedStrokes plus called', updatedHoleP);
-      getScorecard(scorecardId);
-      // setData([...updatedHoleP.data]);
+      console.log(measuredThrow.data.id);
+      setThrowData(measuredThrow.data);
+      setThrowId(parseInt(measuredThrow.data.id, 10));
     } catch (error) {
       console.log(error);
     }
   };
-  const updateStrokesMinus = async (id, strokes, scorecardId) => {
+
+  const deleteThrow = async () => {
+    // console.log(typeof id, id);
     const headers = {
       Authorization: `Bearer ${accessToken}`,
     };
     try {
-      const updatedHoleM = await axios.patch(
-        `http://localhost:3000/hole/${id}`,
-        {strokes: strokes - 1},
+      const measuredThrow = await axios.delete(
+        `http://localhost:3000/measure-throws/${throwId}`,
         {headers},
       );
-      //   setData(updatedHoleM.data);
-      //   console.log(updatedHoleM.data);
-      getScorecard(scorecardId);
+      //   setThrowData(measuredThrow.data);
     } catch (error) {
       console.log(error);
     }
   };
-  //   console.log(emailInput);
-  const handlePress = courseLength => {
-    if (courseLength === '18') {
-      setCourseLength(18);
-    } else if (courseLength === '9') {
-      setCourseLength(9);
-    }
-  };
-  //   const fun = () => {};
+
+  //   const editThrow = async id => {
+  //     const headers = {
+  //       Authorization: `Bearer ${accessToken}`,
+  //     };
+  //     try {
+  //       const measuredThrow = await axios.patch(
+  //         `http://localhost:3000/measure-throws/${id}`,
+  //         {disc: discName, distance: distance, throwtype: throwName},
+  //         {headers},
+  //       );
+  //       setThrowData(measuredThrow.data);
+  //       //   setThrowData(measuredThrow.data);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+
+  //   const renderItem2 = ({item}) => {
+  //     console.log('render item is: ', item);
+  //     return (
+  //       <View style={styles.renderItemStyle}>
+  //         <Text style={{alignSelf: 'center', fontSize: 20, fontWeight: '600'}}>
+  //           {' '}
+  //           Throws: {item}
+  //         </Text>
+  //       </View>
+  //     );
+  //   };
+  //   const handlePress = courseLength => {
+  //     if (courseLength === '18') {
+  //       setCourseLength(18);
+  //     } else if (courseLength === '9') {
+  //       setCourseLength(9);
+  //     }
+  //   };
+  //   const handleInputChange = enteredId => {
+  //     setThrowId(parseInt(enteredId));
+  //     // setThrowId(parseInt(enteredId));
+  //     deleteThrow(throwId);
+  //   };
   return (
     <SafeAreaView style={styles.box1}>
       <View>
         <Text style={styles.headerStyle}>Disc Golf App</Text>
         {/* <FlatList
-          renderItem={renderItem1}
-          data={scorecardData}
-          contentContainerStyle={styles.flatlistStyle}
-        /> */}
-        <FlatList
-          renderItem={renderItem}
+          renderItem={renderIte
           data={holeData}
           contentContainerStyle={styles.flatlistStyle}
+        /> */}
+        <TextInput
+          style={styles.textInput}
+          onChangeText={setEmailInput}
+          value={emailInput}
+          placeholder={'email'}
+        />
+        <TextInput
+          style={styles.textInput}
+          onChangeText={setPasswordInput}
+          value={passwordInput}
+          placeholder={'password'}
         />
         <TouchableOpacity style={styles.button} onPress={signIn}>
           <Text style={styles.buttonText}>Sign In</Text>
         </TouchableOpacity>
         <TextInput
           style={styles.textInput}
-          onChangeText={setEmailInput}
-          value={emailInput}
+          onChangeText={setDiscName}
+          value={discName}
+          placeholder={'Disc'}
+          clearButtonMode={'always'}
         />
         <TextInput
           style={styles.textInput}
-          onChangeText={setPasswordInput}
-          value={passwordInput}
+          onChangeText={setThrowName}
+          value={throwName}
+          placeholder={'Throw Type'}
+          clearButtonMode={'always'}
         />
         <TextInput
+          style={styles.textInput}
+          onChangeText={setDistance}
+          value={distance}
+          placeholder={'Distance'}
+          clearButtonMode={'always'}
+        />
+        <View style={{flexDirection: 'row'}}>
+          <TouchableOpacity style={styles.button} onPress={createThrow}>
+            <Text style={styles.buttonText}>Create Throw</Text>
+          </TouchableOpacity>
+          {/* <TouchableOpacity style={styles.button} onPress={editThrow}>
+            <Text style={styles.buttonText}>Edit Throw</Text>
+          </TouchableOpacity> */}
+        </View>
+        <TextInput
+          style={styles.textInput}
+          onChangeText={setThrowId}
+          value={throwId}
+          placeholder={'throw id'}
+          clearButtonMode={'always'}
+        />
+        <TouchableOpacity style={styles.button} onPress={deleteThrow}>
+          <Text style={styles.buttonText}>Delete Throw</Text>
+        </TouchableOpacity>
+        {/* <FlatList
+          renderItem={renderItem2}
+          data={throwData}
+          contentContainerStyle={styles.flatlistStyle}
+        /> */}
+        {/* <TextInput
           style={styles.textInput}
           onChangeText={setCourseName}
           value={courseName}
-        />
+          placeholder={'Course Name'}
+        /> */}
         {/* <TextInput
           style={styles.textInput}
           onChangeText={setFirstName}
@@ -310,14 +427,14 @@ const App = () => {
         {/* <Text>{courseName}</Text>
         <Text>{courseLength}</Text> */}
         <View style={styles.buttonView}>
-          <Button title="18" onPress={() => handlePress('18')} />
+          {/* <Button title="18" onPress={() => handlePress('18')} />
           <Button title="9" onPress={() => handlePress('9')} />
           <TouchableOpacity style={styles.button} onPress={createScorecard}>
             <Text style={styles.buttonText}>Create Scorecard</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={getScorecard}>
+          </TouchableOpacity> */}
+          {/* <TouchableOpacity style={styles.button} onPress={getScorecard}>
             <Text style={styles.buttonText}>Get Scorecards</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           {/* <TouchableOpacity style={styles.button} onPress={deleteScorecard}>
             <Text style={styles.buttonText}>Delete Scorecard</Text>
           </TouchableOpacity> */}
@@ -343,7 +460,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   headerStyle: {
-    paddingTop: 40,
+    paddingTop: 5,
     fontSize: 40,
     padding: 10,
     alignSelf: 'center',
@@ -362,6 +479,7 @@ const styles = StyleSheet.create({
   },
   button: {
     alignItems: 'center',
+    alignSelf: 'center',
     backgroundColor: 'blue',
     width: 100,
     padding: 10,
