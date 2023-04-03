@@ -15,14 +15,15 @@ import axios from 'axios';
 
 const App = () => {
   //   AsyncStorage.setItem('access_token', access_token);
-  const [data, setData] = useState([]);
+  const [holeData, setHoleData] = useState([]);
+  const [scorecardData, setScorecardData] = useState({});
+
   const [courseName, setCourseName] = useState('');
   const [courseLength, setCourseLength] = useState(0);
 
   const [accessToken, setAccessToken] = useState('');
   const [emailInput, setEmailInput] = useState('');
   const [passwordInput, setPasswordInput] = useState('');
-  const [cardId, setCardId] = useState('');
   //   const [userDetails, setUserDetails] = useState({});
   //   const [lastName, setLastname] = useState('');
   //   const [firstName, setFirstName] = useState('');
@@ -106,9 +107,8 @@ const App = () => {
       );
       setCourseLength(0);
       setCourseName('');
-      setData(scorecard.data.holes);
-      setCardId(scorecard.data.id);
-      console.log(scorecard.data.holes);
+      setHoleData(scorecard.data.holes);
+      //   console.log(scorecard.data.holes);
     } catch (error) {
       console.log(error);
     }
@@ -122,11 +122,25 @@ const App = () => {
       const scoreC = await axios.get(`http://localhost:3000/scorecard/${id}`, {
         headers,
       });
-      setData(scoreC.data.holes);
+      setHoleData(scoreC.data.holes);
     } catch (error) {
       console.log(error);
     }
   };
+
+  //   const getScorecards = async () => {
+  //     const headers = {
+  //       Authorization: `Bearer ${accessToken}`,
+  //     };
+  //     try {
+  //       const scoreC = await axios.get(`http://localhost:3000/scorecard`, {
+  //         headers,
+  //       });
+  //       setScorecardData(scoreC.data);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
 
   const getHole = async id => {
     const headers = {
@@ -136,7 +150,7 @@ const App = () => {
       const hole = await axios.get(`http://localhost:3000/hole/${id}`, {
         headers,
       });
-      setData(hole.data);
+      setHoleData(hole.data);
     } catch (error) {
       console.log(error);
     }
@@ -151,6 +165,7 @@ const App = () => {
         `http://localhost:3000/scorecard/${id}`,
         {headers},
       );
+      getScorecard(scorecardId);
     } catch (error) {
       console.log(error);
     }
@@ -194,13 +209,18 @@ const App = () => {
             updateStrokesMinus(item.id, item.strokes, item.scorecardId)
           }
         />
-        <Button
-          title={'x'}
-          onPress={() => deleteHole(item.id, item.scorecardId)}
-        />
+        <Button title={'x'} onPress={() => deleteScorecard(item.scorecardId)} />
       </View>
     );
   };
+
+  // const renderItem1 = ({item}) => {
+  //   return (
+  //     <View style={styles.renderItemStyle}>
+  //       <Text>{item.courseName}</Text>
+  //     </View>
+  //   );
+  // };
 
   const updateStrokesPlus = async (id, strokes, scorecardId) => {
     const headers = {
@@ -249,12 +269,17 @@ const App = () => {
     <SafeAreaView style={styles.box1}>
       <View>
         <Text style={styles.headerStyle}>Disc Golf App</Text>
+        {/* <FlatList
+          renderItem={renderItem1}
+          data={scorecardData}
+          contentContainerStyle={styles.flatlistStyle}
+        /> */}
         <FlatList
           renderItem={renderItem}
-          data={data}
+          data={holeData}
           contentContainerStyle={styles.flatlistStyle}
         />
-        {/* <TouchableOpacity style={styles.button} onPress={signIn}>
+        <TouchableOpacity style={styles.button} onPress={signIn}>
           <Text style={styles.buttonText}>Sign In</Text>
         </TouchableOpacity>
         <TextInput
@@ -271,7 +296,7 @@ const App = () => {
           style={styles.textInput}
           onChangeText={setCourseName}
           value={courseName}
-        /> */}
+        />
         {/* <TextInput
           style={styles.textInput}
           onChangeText={setFirstName}
@@ -290,6 +315,12 @@ const App = () => {
           <TouchableOpacity style={styles.button} onPress={createScorecard}>
             <Text style={styles.buttonText}>Create Scorecard</Text>
           </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={getScorecard}>
+            <Text style={styles.buttonText}>Get Scorecards</Text>
+          </TouchableOpacity>
+          {/* <TouchableOpacity style={styles.button} onPress={deleteScorecard}>
+            <Text style={styles.buttonText}>Delete Scorecard</Text>
+          </TouchableOpacity> */}
         </View>
       </View>
     </SafeAreaView>
