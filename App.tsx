@@ -27,7 +27,7 @@ const App = () => {
   const [throwId, setThrowId] = useState(0);
   //   const [enteredId, setEnteredId] = useState('');
 
-  const [throwData, setThrowData] = useState({});
+  const [throwData, setThrowData] = useState([]);
 
   const [accessToken, setAccessToken] = useState('');
   const [emailInput, setEmailInput] = useState('');
@@ -300,34 +300,66 @@ const App = () => {
     }
   };
 
-  //   const editThrow = async id => {
-  //     const headers = {
-  //       Authorization: `Bearer ${accessToken}`,
-  //     };
-  //     try {
-  //       const measuredThrow = await axios.patch(
-  //         `http://localhost:3000/measure-throws/${id}`,
-  //         {disc: discName, distance: distance, throwtype: throwName},
-  //         {headers},
-  //       );
-  //       setThrowData(measuredThrow.data);
-  //       //   setThrowData(measuredThrow.data);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
+  const getThrows = async () => {
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+    };
+    try {
+      const measuredThrows = await axios.get(
+        'http://localhost:3000/measure-throws',
+        {headers},
+      );
+      console.log('measured Throws console.log is: ', measuredThrows.data);
+      setThrowData(measuredThrows.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-  //   const renderItem2 = ({item}) => {
-  //     console.log('render item is: ', item);
-  //     return (
-  //       <View style={styles.renderItemStyle}>
-  //         <Text style={{alignSelf: 'center', fontSize: 20, fontWeight: '600'}}>
-  //           {' '}
-  //           Throws: {item}
-  //         </Text>
-  //       </View>
-  //     );
-  //   };
+  const getThrowsById = async () => {
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+    };
+    try {
+      const measuredThrow = await axios.get(
+        `http://localhost:3000/measure-throws/${throwId}`,
+        {headers},
+      );
+      setThrowData(measuredThrow.data);
+      console.log(measuredThrow.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const editThrow = async () => {
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+    };
+    try {
+      const measuredThrow = await axios.patch(
+        `http://localhost:3000/measure-throws/${throwId}`,
+        {disc: discName, distance: distance, throwtype: throwName},
+        {headers},
+      );
+      setThrowData(measuredThrow.data);
+      //   setThrowData(measuredThrow.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const renderItem2 = ({item}) => {
+    console.log('render item is: ', item);
+    return (
+      <View style={styles.renderItemStyle}>
+        <Text style={{alignSelf: 'center', fontSize: 20, fontWeight: '600'}}>
+          {' '}
+          Throws: {item.disc}
+        </Text>
+      </View>
+    );
+  };
   //   const handlePress = courseLength => {
   //     if (courseLength === '18') {
   //       setCourseLength(18);
@@ -340,6 +372,7 @@ const App = () => {
   //     // setThrowId(parseInt(enteredId));
   //     deleteThrow(throwId);
   //   };
+  console.log('throw data is: ', throwData);
   return (
     <SafeAreaView style={styles.box1}>
       <View>
@@ -364,7 +397,7 @@ const App = () => {
         <TouchableOpacity style={styles.button} onPress={signIn}>
           <Text style={styles.buttonText}>Sign In</Text>
         </TouchableOpacity>
-        <TextInput
+        {/* <TextInput
           style={styles.textInput}
           onChangeText={setDiscName}
           value={discName}
@@ -384,30 +417,33 @@ const App = () => {
           value={distance}
           placeholder={'Distance'}
           clearButtonMode={'always'}
-        />
+        /> */}
         <View style={{flexDirection: 'row'}}>
-          <TouchableOpacity style={styles.button} onPress={createThrow}>
+          {/* <TouchableOpacity style={styles.button} onPress={createThrow}>
             <Text style={styles.buttonText}>Create Throw</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           {/* <TouchableOpacity style={styles.button} onPress={editThrow}>
             <Text style={styles.buttonText}>Edit Throw</Text>
           </TouchableOpacity> */}
         </View>
-        <TextInput
+        {/* <TextInput
           style={styles.textInput}
           onChangeText={setThrowId}
           value={throwId}
           placeholder={'throw id'}
           clearButtonMode={'always'}
-        />
-        <TouchableOpacity style={styles.button} onPress={deleteThrow}>
+        /> */}
+        {/* <TouchableOpacity style={styles.button} onPress={deleteThrow}>
           <Text style={styles.buttonText}>Delete Throw</Text>
+        </TouchableOpacity> */}
+        <TouchableOpacity style={styles.button} onPress={getThrows}>
+          <Text style={styles.buttonText}>Get Throws</Text>
         </TouchableOpacity>
-        {/* <FlatList
+        <FlatList
           renderItem={renderItem2}
           data={throwData}
           contentContainerStyle={styles.flatlistStyle}
-        /> */}
+        />
         {/* <TextInput
           style={styles.textInput}
           onChangeText={setCourseName}
